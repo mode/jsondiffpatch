@@ -91,18 +91,20 @@ export const collectChildrenPatchFilter = function collectChildrenPatchFilter(
   }
   let length = context.children.length;
   let child;
+  let result = context.options.immutable ? { ...context.left } : context.left;
+
   for (let index = 0; index < length; index++) {
     child = context.children[index];
     if (
       Object.prototype.hasOwnProperty.call(context.left, child.childName) &&
       child.result === undefined
     ) {
-      delete context.left[child.childName];
+      delete result[child.childName];
     } else if (context.left[child.childName] !== child.result) {
-      context.left[child.childName] = child.result;
+      result[child.childName] = child.result;
     }
   }
-  context.setResult(context.left).exit();
+  context.setResult(result).exit();
 };
 collectChildrenPatchFilter.filterName = 'collectChildren';
 

@@ -284,7 +284,7 @@ export const patchFilter = function nestedPatchFilter(context) {
   let index1;
 
   let delta = context.delta;
-  let array = context.left;
+  let array = context.options.immutable ? context.slice(0) : context.left;
 
   // first, separate removals, insertions and modifications
   let toRemove = [];
