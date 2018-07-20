@@ -91,7 +91,7 @@ export const collectChildrenPatchFilter = function collectChildrenPatchFilter(
   }
   let length = context.children.length;
   let child;
-  let result = context.options.immutable ? { ...context.left } : context.left;
+  let result = context.options.immutable ? (Array.isArray(context.left) && context.left.slice(0) || { ...context.left }) : context.left;
 
   for (let index = 0; index < length; index++) {
     child = context.children[index];

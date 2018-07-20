@@ -284,7 +284,7 @@ export const patchFilter = function nestedPatchFilter(context) {
   let index1;
 
   let delta = context.delta;
-  let array = context.options.immutable ? context.slice(0) : context.left;
+  let array = context.options.immutable ? context.left.slice(0) : context.left;
 
   // first, separate removals, insertions and modifications
   let toRemove = [];
@@ -350,7 +350,7 @@ export const patchFilter = function nestedPatchFilter(context) {
     for (index = 0; index < toModifyLength; index++) {
       let modification = toModify[index];
       child = new PatchContext(
-        context.left[modification.index],
+        array[modification.index],
         modification.delta
       );
       context.push(child, modification.index);
@@ -358,7 +358,7 @@ export const patchFilter = function nestedPatchFilter(context) {
   }
 
   if (!context.children) {
-    context.setResult(context.left).exit();
+    context.setResult(array).exit();
     return;
   }
   context.exit();
@@ -376,11 +376,14 @@ export const collectChildrenPatchFilter = function collectChildrenPatchFilter(
   }
   let length = context.children.length;
   let child;
+
+  let result = context.options.immutable ? (Array.isArray(context.left) && context.left.slice(0) || { ...context.left }) : context.left;
+
   for (let index = 0; index < length; index++) {
     child = context.children[index];
-    context.left[child.childName] = child.result;
+    result[child.childName] = child.result;
   }
-  context.setResult(context.left).exit();
+  context.setResult(result).exit();
 };
 collectChildrenPatchFilter.filterName = 'arraysCollectChildren';
 
